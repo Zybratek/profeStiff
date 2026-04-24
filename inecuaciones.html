@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inecuaciones Lineales</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,900;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1200;
+    --paper: #fdf6e3;
+    --amber: #d97706;
+    --amber-light: #fef3c7;
+    --amber-mid: #f59e0b;
+    --teal: #0f766e;
+    --teal-light: #ccfbf1;
+    --red: #b91c1c;
+    --red-light: #fee2e2;
+    --green: #15803d;
+    --green-light: #dcfce7;
+    --blue: #1d4ed8;
+    --blue-light: #dbeafe;
+    --border: #d4b96a;
+    --shadow: rgba(26,18,0,0.1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(217,119,6,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, rgba(15,118,110,0.06) 0%, transparent 50%);
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      45deg, transparent, transparent 30px,
+      rgba(255,255,255,0.02) 30px, rgba(255,255,255,0.02) 31px
+    );
+  }
+  .header-label {
+    font-size: .75rem; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--amber-mid); font-weight: 600; margin-bottom: .5rem;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900; line-height: 1.1;
+    margin-bottom: .75rem;
+  }
+  header p {
+    max-width: 550px; margin: 0 auto;
+    font-size: 1rem; opacity: .75; font-weight: 300;
+  }
+
+  /* ── Progress bar ── */
+  .progress-wrap {
+    background: #fff; border-bottom: 1px solid var(--border);
+    padding: .75rem 2rem;
+    display: flex; align-items: center; gap: 1rem;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+  .progress-label { font-size: .8rem; font-weight: 600; white-space: nowrap; color: var(--teal); }
+  .progress-bar {
+    flex: 1; height: 6px; background: #e5e7eb; border-radius: 99px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, var(--amber), var(--teal));
+    border-radius: 99px; transition: width .5s ease;
+    width: 0%;
+  }
+  .progress-score {
+    font-size: .85rem; font-weight: 700; color: var(--ink);
+    background: var(--amber-light); border: 1px solid var(--amber);
+    padding: .2rem .75rem; border-radius: 99px;
+  }
+
+  /* ── Layout ── */
+  main { max-width: 860px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  /* ── Section cards ── */
+  .section-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 16px var(--shadow);
+    animation: fadeUp .5s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-badge {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-size: .7rem; font-weight: 700; letter-spacing: .15em;
+    text-transform: uppercase; padding: .3rem .8rem;
+    border-radius: 99px; margin-bottom: 1rem;
+  }
+  .badge-theory  { background: var(--blue-light);  color: var(--blue); }
+  .badge-example { background: var(--teal-light);  color: var(--teal); }
+  .badge-tip     { background: var(--amber-light); color: var(--amber); }
+  .badge-quiz    { background: var(--red-light);   color: var(--red); }
+  .badge-app     { background: var(--green-light); color: var(--green); }
+
+  .section-card h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.6rem; font-weight: 600;
+    margin-bottom: 1rem; line-height: 1.2;
+  }
+  .section-card p { line-height: 1.75; margin-bottom: .75rem; font-size: .97rem; }
+  .section-card p:last-child { margin-bottom: 0; }
+
+  /* ── Math display ── */
+  .math-box {
+    background: var(--ink); color: var(--paper);
+    border-radius: 10px; padding: 1rem 1.5rem;
+    font-family: 'Fraunces', serif; font-size: 1.3rem;
+    text-align: center; margin: 1rem 0;
+    letter-spacing: .05em;
+  }
+  .math-inline {
+    font-family: 'Fraunces', serif;
+    background: var(--amber-light);
+    border: 1px solid var(--border);
+    padding: .1rem .5rem; border-radius: 5px;
+    font-size: 1rem;
+  }
+
+  /* ── Comparison table ── */
+  .compare-table {
+    width: 100%; border-collapse: collapse; margin: 1rem 0;
+    font-size: .92rem;
+  }
+  .compare-table th {
+    background: var(--ink); color: var(--paper);
+    padding: .6rem 1rem; text-align: left;
+    font-family: 'Fraunces', serif; font-weight: 600;
+  }
+  .compare-table td {
+    padding: .6rem 1rem; border-bottom: 1px solid #e5e7eb;
+  }
+  .compare-table tr:nth-child(even) td { background: #fafafa; }
+  .compare-table tr:hover td { background: var(--amber-light); }
+
+  /* ── Step-by-step ── */
+  .steps { counter-reset: step; list-style: none; margin: 1rem 0; }
+  .steps li {
+    counter-increment: step;
+    display: flex; gap: 1rem; align-items: flex-start;
+    padding: .75rem 0; border-bottom: 1px dashed #e5e7eb;
+  }
+  .steps li:last-child { border-bottom: none; }
+  .steps li::before {
+    content: counter(step);
+    min-width: 2rem; height: 2rem;
+    background: var(--amber); color: #fff;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: .85rem; flex-shrink: 0;
+    margin-top: .1rem;
+  }
+
+  /* ── Number line ── */
+  .number-line-wrap {
+    overflow-x: auto; padding: 1.5rem 0;
+  }
+  .number-line-svg { display: block; margin: 0 auto; }
+
+  /* ── Tip box ── */
+  .tip-box {
+    background: var(--amber-light);
+    border-left: 4px solid var(--amber);
+    border-radius: 0 10px 10px 0;
+    padding: 1rem 1.25rem; margin: 1rem 0;
+    font-size: .93rem;
+  }
+  .tip-box strong { color: var(--amber); }
+
+  /* ── Warning box ── */
+  .warn-box {
+    background: var(--red-light);
+    border-left: 4px solid var(--red);
+    border-radius: 0 10px 10px 0;
+    padding: 1rem 1.25rem; margin: 1rem 0;
+    font-size: .93rem;
+  }
+  .warn-box strong { color: var(--red); }
+
+  /* ── Exercise ── */
+  .exercise {
+    background: var(--paper);
+    border: 2px solid var(--border);
+    border-radius: 14px; padding: 1.5rem;
+    margin: 1.25rem 0;
+  }
+  .exercise-num {
+    font-size: .72rem; font-weight: 700; letter-spacing: .15em;
+    text-transform: uppercase; color: var(--teal);
+    margin-bottom: .4rem;
+  }
+  .exercise p { font-size: 1rem; margin-bottom: 1rem; }
+
+  .choices { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-top: .75rem; }
+  @media (max-width: 500px) { .choices { grid-template-columns: 1fr; } }
+
+  .choice-btn {
+    background: #fff; border: 2px solid #d1d5db;
+    border-radius: 10px; padding: .7rem 1rem;
+    font-family: 'DM Sans', sans-serif; font-size: .93rem;
+    cursor: pointer; text-align: left; transition: all .2s;
+    line-height: 1.4;
+  }
+  .choice-btn:hover:not(:disabled) {
+    border-color: var(--amber); background: var(--amber-light);
+  }
+  .choice-btn.correct {
+    border-color: var(--green); background: var(--green-light); color: var(--green);
+    font-weight: 600;
+  }
+  .choice-btn.wrong {
+    border-color: var(--red); background: var(--red-light); color: var(--red);
+  }
+  .choice-btn:disabled { cursor: default; }
+
+  .feedback {
+    margin-top: .75rem; padding: .75rem 1rem;
+    border-radius: 8px; font-size: .9rem; font-weight: 500;
+    display: none;
+  }
+  .feedback.show { display: block; animation: fadeUp .3s ease; }
+  .feedback.ok  { background: var(--green-light); color: var(--green); border: 1px solid var(--green); }
+  .feedback.err { background: var(--red-light);   color: var(--red);   border: 1px solid var(--red); }
+
+  /* ── Fill-in input ── */
+  .fill-wrap { display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; margin-top: .75rem; }
+  .fill-input {
+    border: 2px solid #d1d5db; border-radius: 8px;
+    padding: .55rem .9rem; font-family: 'DM Sans', sans-serif;
+    font-size: 1rem; width: 200px; transition: border-color .2s;
+  }
+  .fill-input:focus { outline: none; border-color: var(--amber); }
+  .check-btn {
+    background: var(--ink); color: #fff;
+    border: none; border-radius: 8px;
+    padding: .55rem 1.2rem; font-family: 'DM Sans', sans-serif;
+    font-size: .9rem; font-weight: 600; cursor: pointer;
+    transition: background .2s;
+  }
+  .check-btn:hover { background: var(--teal); }
+  .show-btn {
+    background: transparent; color: var(--teal);
+    border: 2px solid var(--teal); border-radius: 8px;
+    padding: .5rem 1rem; font-family: 'DM Sans', sans-serif;
+    font-size: .85rem; cursor: pointer; transition: all .2s;
+  }
+  .show-btn:hover { background: var(--teal-light); }
+
+  /* ── Application scenario ── */
+  .scenario {
+    background: linear-gradient(135deg, var(--teal-light), #e0f2fe);
+    border: 1px solid #7dd3fc;
+    border-radius: 14px; padding: 1.5rem;
+    margin: 1rem 0;
+  }
+  .scenario-title {
+    font-family: 'Fraunces', serif; font-size: 1.1rem;
+    font-weight: 600; margin-bottom: .5rem;
+    display: flex; align-items: center; gap: .5rem;
+  }
+
+  /* ── Solution accordion ── */
+  .solution-toggle {
+    background: none; border: 2px solid var(--teal);
+    color: var(--teal); border-radius: 8px;
+    padding: .5rem 1.1rem; font-family: 'DM Sans', sans-serif;
+    font-size: .88rem; font-weight: 600; cursor: pointer;
+    margin-top: .75rem; display: flex; align-items: center; gap: .5rem;
+    transition: all .2s;
+  }
+  .solution-toggle:hover { background: var(--teal-light); }
+  .solution-body {
+    display: none; margin-top: .75rem;
+    background: #f0fdfa; border: 1px solid #99f6e4;
+    border-radius: 10px; padding: 1.25rem;
+    font-size: .93rem; line-height: 1.7;
+  }
+  .solution-body.open { display: block; animation: fadeUp .3s ease; }
+  .solution-body .math-box { font-size: 1rem; margin: .5rem 0; }
+
+  /* ── Score summary ── */
+  #score-summary {
+    display: none;
+    text-align: center;
+    background: var(--ink); color: var(--paper);
+    border-radius: 16px; padding: 2.5rem 2rem;
+    margin-top: 2rem;
+  }
+  #score-summary.show { display: block; animation: fadeUp .5s ease; }
+  #score-summary h2 { font-family: 'Fraunces', serif; font-size: 2rem; margin-bottom: .5rem; }
+  #score-summary .big-score {
+    font-family: 'Fraunces', serif; font-size: 4rem;
+    color: var(--amber-mid); line-height: 1;
+  }
+  #score-summary p { opacity: .8; margin-top: .75rem; }
+
+  /* ── Decorative rule ── */
+  .divider {
+    text-align: center; margin: 1.5rem 0;
+    color: var(--border); font-size: 1.2rem; letter-spacing: .3em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-label">Matemáticas · Álgebra</div>
+  <h1>Inecuaciones Lineales</h1>
+  <p>Clase interactiva con ejemplos paso a paso, ejercicios y problemas de la vida real</p>
+</header>
+
+<div class="progress-wrap">
+  <span class="progress-label">📊 Progreso</span>
+  <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+  <span class="progress-score" id="prog-score">0 / 0</span>
+</div>
+
+<main>
+
+<!-- ══════════════════════════════════════════════
+     SECCIÓN 1 — De ecuaciones a inecuaciones
+════════════════════════════════════════════════ -->
+<div class="section-card" style="animation-delay:.05s">
+  <span class="section-badge badge-theory">📘 Teoría</span>
+  <h2>¿Qué es una inecuación?</h2>
+  <p>Ya sabes resolver <strong>ecuaciones lineales</strong> como <span class="math-inline">2x + 3 = 11</span>. Allí buscas el valor <em>exacto</em> de <em>x</em> que hace verdadera la igualdad.</p>
+  <p>Una <strong>inecuación</strong> (o desigualdad) hace lo mismo, pero en lugar de <span class="math-inline">=</span> usa uno de estos signos:</p>
+
+  <table class="compare-table">
+    <thead><tr><th>Símbolo</th><th>Se lee</th><th>Ejemplo</th></tr></thead>
+    <tbody>
+      <tr><td><strong>&lt;</strong></td><td>menor que</td><td>x &lt; 5</td></tr>
+      <tr><td><strong>&gt;</strong></td><td>mayor que</td><td>x &gt; −2</td></tr>
+      <tr><td><strong>≤</strong></td><td>menor o igual que</td><td>x ≤ 7</td></tr>
+      <tr><td><strong>≥</strong></td><td>mayor o igual que</td><td>x ≥ 0</td></tr>
+    </tbody>
+  </table>
+
+  <p>La solución <strong>no es un solo número</strong> sino un <em>conjunto de números</em> — todos los valores que cumplen la condición.</p>
+
+  <div class="tip-box">
+    <strong>💡 Analogía:</strong> Si una ecuación es "buscar tu talla exacta de zapato", una inecuación es "encontrar todos los zapatos que te quedan bien porque no son demasiado apretados".
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECCIÓN 2 — Representación en la recta
+════════════════════════════════════════════════ -->
+<div class="section-card" style="animation-delay:.1s">
+  <span class="section-badge badge-theory">📘 Teoría</span>
+  <h2>Representación en la recta numérica</h2>
+  <p>La solución se representa con una <strong>flecha sobre una recta</strong> numérica:</p>
+  <ul style="margin-left:1.5rem;line-height:2;font-size:.95rem;">
+    <li>🔴 <strong>Círculo vacío (○)</strong> — el valor <em>no</em> se incluye (<span class="math-inline">&lt;</span> o <span class="math-inline">&gt;</span>)</li>
+    <li>🟢 <strong>Círculo relleno (●)</strong> — el valor <em>sí</em> se incluye (<span class="math-inline">≤</span> o <span class="math-inline">≥</span>)</li>
+  </ul>
+
+  <p style="margin-top:1rem;font-weight:600;">Ejemplo visual de las cuatro posibilidades para <em>x</em> = 3:</p>
+
+  <!-- SVG number lines -->
+  <div class="number-line-wrap">
+    <svg class="number-line-svg" width="680" height="220" viewBox="0 0 680 220" font-family="DM Sans, sans-serif" font-size="13">
+      <!-- Labels -->
+      <text x="10" y="30" font-weight="600" fill="#1a1200">x &lt; 3</text>
+      <text x="10" y="80" font-weight="600" fill="#1a1200">x &gt; 3</text>
+      <text x="10" y="130" font-weight="600" fill="#1a1200">x ≤ 3</text>
+      <text x="10" y="180" font-weight="600" fill="#1a1200">x ≥ 3</text>
+
+      <!-- Row 1: x < 3 -->
+      <line x1="70" y1="22" x2="650" y2="22" stroke="#d1d5db" stroke-width="2"/>
+      <line x1="70" y1="22" x2="330" y2="22" stroke="#1d4ed8" stroke-width="3"/>
+      <circle cx="330" cy="22" r="6" fill="white" stroke="#1d4ed8" stroke-width="2.5"/>
+      <polygon points="70,22 90,16 90,28" fill="#1d4ed8"/>
+      <!-- ticks row1 -->
+      <g fill="#6b7280" font-size="11">
+        <line x1="210" y1="18" x2="210" y2="26" stroke="#9ca3af" stroke-width="1.5"/>
+        <text x="207" y="38" text-anchor="middle">0</text>
+        <line x1="270" y1="18" x2="270" y2="26" stroke="#9ca3af" stroke-width="1.5"/>
+        <text x="267" y="38" text-anchor="middle">2</text>
+        <line x1="330" y1="18" x2="330" y2="26" stroke="#9ca3af" stroke-width="1.5"/>
+        <text x="327" y="38" text-anchor="middle">3</text>
+        <line x1="390" y1="18" x2="390" y2="26" stroke="#9ca3af" stroke-width="1.5"/>
+        <text x="387" y="38" text-anchor="middle">4</text>
+        <line x1="450" y1="18" x2="450" y2="26" stroke="#9ca3af" stroke-width="1.5"/>
+        <text x="447" y="38" text-anchor="middle">5</text>
+      </g>
+
+      <!-- Row 2: x > 3 -->
+      <line x1="70" y1="72" x2="650" y2="72" stroke="#d1d5db" stroke-width="2"/>
+      <line x1="330" y1="72" x2="640" y2="72" stroke="#b91c1c" stroke-width="3"/>
+      <circle cx="330" cy="72" r="6" fill="white" stroke="#b91c1c" stroke-width="2.5"/>
+      <polygon points="650,72 630,66 630,78" fill="#b91c1c"/>
+      <g fill="#6b7280" font-size="11">
+        <line x1="210" y1="68" x2="210" y2="76" stroke="#9ca3af" stroke-width="1.5"/><text x="207" y="88" text-anchor="middle">0</text>
+        <line x1="270" y1="68" x2="270" y2="76" stroke="#9ca3af" stroke-width="1.5"/><text x="267" y="88" text-anchor="middle">2</text>
+        <line x1="330" y1="68" x2="330" y2="76" stroke="#9ca3af" stroke-width="1.5"/><text x="327" y="88" text-anchor="middle">3</text>
+        <line x1="390" y1="68" x2="390" y2="76" stroke="#9ca3af" stroke-width="1.5"/><text x="387" y="88" text-anchor="middle">4</text>
+        <line x1="450" y1="68" x2="450" y2="76" stroke="#9ca3af" stroke-width="1.5"/><text x="447" y="88" text-anchor="middle">5</text>
+      </g>
+
+      <!-- Row 3: x ≤ 3 -->
+      <line x1="70" y1="122" x2="650" y2="122" stroke="#d1d5db" stroke-width="2"/>
+      <line x1="70" y1="122" x2="330" y2="122" stroke="#0f766e" stroke-width="3"/>
+      <circle cx="330" cy="122" r="6" fill="#0f766e" stroke="#0f766e" stroke-width="2.5"/>
+      <polygon points="70,122 90,116 90,128" fill="#0f766e"/>
+      <g fill="#6b7280" font-size="11">
+        <line x1="210" y1="118" x2="210" y2="126" stroke="#9ca3af" stroke-width="1.5"/><text x="207" y="138" text-anchor="middle">0</text>
+        <line x1="270" y1="118" x2="270" y2="126" stroke="#9ca3af" stroke-width="1.5"/><text x="267" y="138" text-anchor="middle">2</text>
+        <line x1="330" y1="118" x2="330" y2="126" stroke="#9ca3af" stroke-width="1.5"/><text x="327" y="138" text-anchor="middle">3</text>
+        <line x1="390" y1="118" x2="390" y2="126" stroke="#9ca3af" stroke-width="1.5"/><text x="387" y="138" text-anchor="middle">4</text>
+        <line x1="450" y1="118" x2="450" y2="126" stroke="#9ca3af" stroke-width="1.5"/><text x="447" y="138" text-anchor="middle">5</text>
+      </g>
+
+      <!-- Row 4: x ≥ 3 -->
+      <line x1="70" y1="172" x2="650" y2="172" stroke="#d1d5db" stroke-width="2"/>
+      <line x1="330" y1="172" x2="640" y2="172" stroke="#d97706" stroke-width="3"/>
+      <circle cx="330" cy="172" r="6" fill="#d97706" stroke="#d97706" stroke-width="2.5"/>
+      <polygon points="650,172 630,166 630,178" fill="#d97706"/>
+      <g fill="#6b7280" font-size="11">
+        <line x1="210" y1="168" x2="210" y2="176" stroke="#9ca3af" stroke-width="1.5"/><text x="207" y="188" text-anchor="middle">0</text>
+        <line x1="270" y1="168" x2="270" y2="176" stroke="#9ca3af" stroke-width="1.5"/><text x="267" y="188" text-anchor="middle">2</text>
+        <line x1="330" y1="168" x2="330" y2="176" stroke="#9ca3af" stroke-width="1.5"/><text x="327" y="188" text-anchor="middle">3</text>
+        <line x1="390" y1="168" x2="390" y2="176" stroke="#9ca3af" stroke-width="1.5"/><text x="387" y="188" text-anchor="middle">4</text>
+        <line x1="450" y1="168" x2="450" y2="176" stroke="#9ca3af" stroke-width="1.5"/><text x="447" y="188" text-anchor="middle">5</text>
+      </g>
+    </svg>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECCIÓN 3 — Cómo resolver
+════════════════════════════════════════════════ -->
+<div class="section-card" style="animation-delay:.15s">
+  <span class="section-badge badge-theory">📘 Teoría</span>
+  <h2>Cómo resolver una inecuación lineal</h2>
+  <p>Los pasos son <strong>casi idénticos a los de una ecuación</strong>. La única diferencia importante es la <em>regla del cambio de signo</em>.</p>
+
+  <ol class="steps">
+    <li>Simplifica cada lado si es necesario (distribuye, combina términos semejantes).</li>
+    <li>Pasa todos los términos con <em>x</em> a un lado y los números al otro, <strong>usando las mismas operaciones que con ecuaciones</strong>.</li>
+    <li>Divide (o multiplica) para dejar <em>x</em> sola.</li>
+    <li>Si multiplicas o divides por un <strong>número negativo</strong>, <span style="color:var(--red);font-weight:700">invierte el signo de desigualdad</span>.</li>
+    <li>Escribe la solución e indícala en la recta numérica.</li>
+  </ol>
+
+  <div class="warn-box">
+    <strong>⚠️ Regla clave:</strong> Si en algún paso divides o multiplicas <em>ambos lados</em> por un número <strong>negativo</strong>, el signo <span class="math-inline">&lt;</span> se convierte en <span class="math-inline">&gt;</span> (y viceversa). Con números positivos, el signo <strong>no cambia</strong>.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECCIÓN 4 — Ejemplo resuelto 1
+════════════════════════════════════════════════ -->
+<div class="section-card" style="animation-delay:.2s">
+  <span class="section-badge badge-example">✏️ Ejemplo resuelto</span>
+  <h2>Ejemplo 1 — sin cambio de signo</h2>
+  <p>Resuelve: <span class="math-inline">2x − 5 &lt; 7</span></p>
+
+  <ol class="steps">
+    <li>Sumamos 5 a ambos lados:<div class="math-box">2x − 5 + 5 &lt; 7 + 5 &nbsp;→&nbsp; 2x &lt; 12</div></li>
+    <li>Dividimos entre 2 (positivo → el signo <strong>no cambia</strong>):<div class="math-box">x &lt; 6</div></li>
+    <li>Solución: todos los números menores que 6. En notación de intervalo: <span class="math-inline">(−∞, 6)</span></li>
+  </ol>
+
+  <div class="tip-box">
+    <strong>✅ Verificación:</strong> Prueba x = 4 → 2(4) − 5 = 3 &lt; 7 ✓ &nbsp;|&nbsp; Prueba x = 7 → 2(7) − 5 = 9 &lt; 7 ✗ (correcto, 7 no es solución)
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECCIÓN 5 — Ejemplo resuelto 2
+════════════════════════════════════════════════ -->
+<div class="section-card" style="animation-delay:.22s">
+  <span class="section-badge badge-example">✏️ Ejemplo resuelto</span>
+  <h2>Ejemplo 2 — con cambio de signo</h2>
+  <p>Resuelve: <span class="math-inline">−3x + 1 ≥ 10</span></p>
+
+  <ol class="steps">
+    <li>Restamos 1 a ambos lados:<div class="math-box">−3x ≥ 9</div></li>
+    <li>Dividimos entre −3 (negativo → <span style="color:var(--red);font-weight:700">invertimos el signo ≥ por ≤</span>):<div class="math-box">x ≤ −3</div></li>
+    <li>Solución: todos los números menores o iguales que −3. En intervalo: <span class="math-inline">(−∞, −3]</span></li>
+  </ol>
+
+  <div class="warn-box">
+    <strong>⚠️ Sin el cambio de signo</strong> obtendríamos x ≥ −3, que es incorrecto. Compruébalo: x = −5 → −3(−5)+1 = 16 ≥ 10 ✓ &nbsp;|&nbsp; x = 0 → 1 ≥ 10 ✗
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECCIÓN 6 — Ejercicios de práctica
+════════════════════════════════════════════════ -->
+<div class="section-card" style="animation-delay:.25s">
+  <span class="section-badge badge-quiz">🧩 Ejercicios</span>
+  <h2>Practica — Opción múltiple</h2>
+  <p>Elige la respuesta correcta. Recibirás retroalimentación inmediata.</p>
+
+  <!-- Ejercicio 1 -->
+  <div class="exercise">
+    <div class="exercise-num">Ejercicio 1 de 4</div>
+    <p>¿Cuál es la solución de <strong>3x + 6 &gt; 15</strong>?</p>
+    <div class="choices" id="q1">
+      <button class="choice-btn" onclick="check(this,'q1',false)">x &gt; 1</button>
+      <button class="choice-btn" onclick="check(this,'q1',true)">x &gt; 3</button>
+      <button class="choice-btn" onclick="check(this,'q1',false)">x &lt; 3</button>
+      <button class="choice-btn" onclick="check(this,'q1',false)">x ≥ 3</button>
+    </div>
+    <div class="feedback" id="q1-fb"></div>
+  </div>
+
+  <!-- Ejercicio 2 -->
+  <div class="exercise">
+    <div class="exercise-num">Ejercicio 2 de 4</div>
+    <p>Resuelve: <strong>−4x ≤ 20</strong></p>
+    <div class="choices" id="q2">
+      <button class="choice-btn" onclick="check(this,'q2',false)">x ≤ −5</button>
+      <button class="choice-btn" onclick="check(this,'q2',false)">x ≤ 5</button>
+      <button class="choice-btn" onclick="check(this,'q2',true)">x ≥ −5</button>
+      <button class="choice-btn" onclick="check(this,'q2',false)">x &gt; −5</button>
+    </div>
+    <div class="feedback" id="q2-fb"></div>
+  </div>
+
+  <!-- Ejercicio 3 -->
+  <div class="exercise">
+    <div class="exercise-num">Ejercicio 3 de 4</div>
+    <p>¿Cuál de estos valores <strong>sí satisface</strong> la inecuación <strong>5x − 2 ≤ 13</strong>?</p>
+    <div class="choices" id="q3">
+      <button class="choice-btn" onclick="check(this,'q3',false)">x = 4</button>
+      <button class="choice-btn" onclick="check(this,'q3',true)">x = 3</button>
+      <button class="choice-btn" onclick="check(this,'q3',false)">x = 10</button>
+      <button class="choice-btn" onclick="check(this,'q3',false)">x = 5</button>
+    </div>
+    <div class="feedback" id="q3-fb"></div>
+  </div>
+
+  <!-- Ejercicio 4 -->
+  <div class="exercise">
+    <div class="exercise-num">Ejercicio 4 de 4</div>
+    <p>La solución de <strong>2(x − 4) &gt; x + 1</strong> es:</p>
+    <div class="choices" id="q4">
+      <button class="choice-btn" onclick="check(this,'q4',false)">x &gt; 7</button>
+      <button class="choice-btn" onclick="check(this,'q4',false)">x &gt; 3</button>
+      <button class="choice-btn" onclick="check(this,'q4',true)">x &gt; 9</button>
+      <button class="choice-btn" onclick="check(this,'q4',false)">x &lt; 9</button>
+    </div>
+    <div class="feedback" id="q4-fb"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECCIÓN 7 — Ejercicios de completar
+════════════════════════════════════════════════ -->
+<div class="section-card" style="animation-delay:.3s">
+  <span class="section-badge badge-quiz">✍️ Ejercicios</span>
+  <h2>Escribe la respuesta</h2>
+  <p>Resuelve y escribe la solución en la forma indicada (p. ej. <strong>x &gt; 2</strong>).</p>
+
+  <!-- Fill 1 -->
+  <div class="exercise">
+    <div class="exercise-num">Ejercicio 5</div>
+    <p>Resuelve: <strong>x + 8 &lt; 14</strong> &nbsp; (escribe como x &lt; ?)</p>
+    <div class="fill-wrap">
+      <input class="fill-input" id="f1" placeholder="x < ?" />
+      <button class="check-btn" onclick="checkFill('f1','f1-fb',['x<6','x &lt; 6'])">Verificar</button>
+      <button class="show-btn" onclick="showAns('f1-fb','Resta 8: x < 6')">Ver solución</button>
+    </div>
+    <div class="feedback" id="f1-fb"></div>
+  </div>
+
+  <!-- Fill 2 -->
+  <div class="exercise">
+    <div class="exercise-num">Ejercicio 6</div>
+    <p>Resuelve: <strong>−2x + 4 &gt; 10</strong> &nbsp; (escribe como x &lt; ? o x &gt; ?)</p>
+    <div class="fill-wrap">
+      <input class="fill-input" id="f2" placeholder="x < ?" />
+      <button class="check-btn" onclick="checkFill('f2','f2-fb',['x<-3','x &lt; -3','x<−3'])">Verificar</button>
+      <button class="show-btn" onclick="showAns('f2-fb','Resta 4: −2x > 6. Divide entre −2 (invierte): x < −3')">Ver solución</button>
+    </div>
+    <div class="feedback" id="f2-fb"></div>
+  </div>
+
+  <!-- Fill 3 -->
+  <div class="exercise">
+    <div class="exercise-num">Ejercicio 7</div>
+    <p>Resuelve: <strong>3x − 7 ≥ 2x + 5</strong></p>
+    <div class="fill-wrap">
+      <input class="fill-input" id="f3" placeholder="x ≥ ?" />
+      <button class="check-btn" onclick="checkFill('f3','f3-fb',['x≥12','x>=12','x ≥ 12'])">Verificar</button>
+      <button class="show-btn" onclick="showAns('f3-fb','Resta 2x: x − 7 ≥ 5. Suma 7: x ≥ 12')">Ver solución</button>
+    </div>
+    <div class="feedback" id="f3-fb"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECCIÓN 8 — Problemas aplicativos
+════════════════════════════════════════════════ -->
+<div class="section-card" style="animation-delay:.35s">
+  <span class="section-badge badge-app">🌍 Aplicación</span>
+  <h2>Problemas de la vida real</h2>
+  <p>Las inecuaciones aparecen cuando queremos expresar condiciones como <em>"al menos", "como máximo", "no más de"</em>...</p>
+
+  <!-- Problema 1 -->
+  <div class="scenario">
+    <div class="scenario-title">🛒 Problema 1 — Presupuesto de compras</div>
+    <p>Sofía tiene <strong>$200</strong> y quiere comprar varios cuadernos que cuestan <strong>$35</strong> cada uno, más una mochila de <strong>$60</strong>. ¿Cuántos cuadernos puede comprar <em>como máximo</em>?</p>
+  </div>
+
+  <button class="solution-toggle" onclick="toggleSol(this,'sol1')">▶ Ver solución paso a paso</button>
+  <div class="solution-body" id="sol1">
+    <ol class="steps">
+      <li>Define la variable: sea <em>n</em> = número de cuadernos.</li>
+      <li>El gasto total debe ser <strong>menor o igual</strong> a $200:
+        <div class="math-box">35n + 60 ≤ 200</div>
+      </li>
+      <li>Resta 60:
+        <div class="math-box">35n ≤ 140</div>
+      </li>
+      <li>Divide entre 35 (positivo, signo igual):
+        <div class="math-box">n ≤ 4</div>
+      </li>
+      <li><strong>Sofía puede comprar como máximo 4 cuadernos.</strong><br>
+        Verificación: 35(4) + 60 = 200 ≤ 200 ✓</li>
+    </ol>
+  </div>
+
+  <!-- Problema 2 -->
+  <div class="scenario" style="margin-top:1.25rem">
+    <div class="scenario-title">🚗 Problema 2 — Velocidad mínima</div>
+    <p>Un conductor recorre <strong>240 km</strong> en un tiempo máximo de <strong>3 horas</strong>. ¿Cuál es la velocidad mínima que debe mantener?</p>
+  </div>
+
+  <button class="solution-toggle" onclick="toggleSol(this,'sol2')">▶ Ver solución paso a paso</button>
+  <div class="solution-body" id="sol2">
+    <ol class="steps">
+      <li>Usamos la fórmula: <span class="math-inline">distancia = velocidad × tiempo</span>, entonces <span class="math-inline">tiempo = distancia ÷ velocidad</span>.</li>
+      <li>El tiempo debe ser <strong>menor o igual</strong> a 3 horas:
+        <div class="math-box">240 / v ≤ 3</div>
+      </li>
+      <li>Multiplicamos ambos lados por <em>v</em> (asumimos v &gt; 0):
+        <div class="math-box">240 ≤ 3v</div>
+      </li>
+      <li>Dividimos entre 3:
+        <div class="math-box">v ≥ 80 km/h</div>
+      </li>
+      <li><strong>El conductor debe ir a al menos 80 km/h.</strong></li>
+    </ol>
+  </div>
+
+  <!-- Problema 3 -->
+  <div class="scenario" style="margin-top:1.25rem">
+    <div class="scenario-title">🎓 Problema 3 — Nota mínima para aprobar</div>
+    <p>Luis tiene dos exámenes con notas <strong>65</strong> y <strong>72</strong>. Si el promedio mínimo para aprobar es <strong>70</strong>, ¿qué nota mínima necesita en el tercer examen?</p>
+  </div>
+
+  <button class="solution-toggle" onclick="toggleSol(this,'sol3')">▶ Ver solución paso a paso</button>
+  <div class="solution-body" id="sol3">
+    <ol class="steps">
+      <li>Sea <em>x</em> = nota del tercer examen.</li>
+      <li>El promedio debe ser <strong>mayor o igual</strong> a 70:
+        <div class="math-box">(65 + 72 + x) / 3 ≥ 70</div>
+      </li>
+      <li>Multiplicamos por 3:
+        <div class="math-box">137 + x ≥ 210</div>
+      </li>
+      <li>Restamos 137:
+        <div class="math-box">x ≥ 73</div>
+      </li>
+      <li><strong>Luis necesita al menos 73 en el tercer examen.</strong></li>
+    </ol>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECCIÓN 9 — Ejercicios aplicativos (quiz)
+════════════════════════════════════════════════ -->
+<div class="section-card" style="animation-delay:.4s">
+  <span class="section-badge badge-quiz">🧩 Ejercicios aplicativos</span>
+  <h2>Pon a prueba tu comprensión</h2>
+
+  <!-- App Q1 -->
+  <div class="exercise">
+    <div class="exercise-num">Ejercicio 8</div>
+    <p>Una empresa de taxis cobra $12 de base más $4 por kilómetro. Un pasajero no quiere pagar más de $40. ¿Cuántos kilómetros puede recorrer <em>como máximo</em>?</p>
+    <div class="choices" id="q5">
+      <button class="choice-btn" onclick="check(this,'q5',false)">5 km</button>
+      <button class="choice-btn" onclick="check(this,'q5',true)">7 km</button>
+      <button class="choice-btn" onclick="check(this,'q5',false)">8 km</button>
+      <button class="choice-btn" onclick="check(this,'q5',false)">10 km</button>
+    </div>
+    <div class="feedback" id="q5-fb"></div>
+  </div>
+
+  <!-- App Q2 -->
+  <div class="exercise">
+    <div class="exercise-num">Ejercicio 9</div>
+    <p>Una caja puede soportar un peso máximo de <strong>50 kg</strong>. Ya tiene libros que pesan <strong>18 kg</strong>. ¿Cuántos kilos adicionales <em>x</em> se pueden añadir?</p>
+    <div class="choices" id="q6">
+      <button class="choice-btn" onclick="check(this,'q6',false)">x &lt; 32</button>
+      <button class="choice-btn" onclick="check(this,'q6',true)">x ≤ 32</button>
+      <button class="choice-btn" onclick="check(this,'q6',false)">x ≥ 32</button>
+      <button class="choice-btn" onclick="check(this,'q6',false)">x &gt; 50</button>
+    </div>
+    <div class="feedback" id="q6-fb"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     RESUMEN DE PUNTAJE
+════════════════════════════════════════════════ -->
+<div id="score-summary">
+  <h2>🎉 ¡Clase completada!</h2>
+  <div class="big-score" id="final-score">0 / 0</div>
+  <p id="score-msg">Sigue practicando para dominar las inecuaciones.</p>
+</div>
+
+</main>
+
+<script>
+// ── State ──────────────────────────────────────
+let total = 0, correct = 0;
+const mcQuestions = ['q1','q2','q3','q4','q5','q6'];
+const fillQuestions = ['f1','f2','f3'];
+const answered = {};
+
+const explanations = {
+  q1: '3x > 15 − 6 = 9 → x > 3. El signo no cambia porque dividimos entre +3.',
+  q2: 'Dividimos entre −4 (negativo) → invertimos: x ≥ −5.',
+  q3: '5(3) − 2 = 13 ≤ 13 ✓. Para x=4: 18 > 13 ✗.',
+  q4: '2x − 8 > x + 1 → x > 9. Distribuye primero: 2x − 8 > x + 1.',
+  q5: '4x + 12 ≤ 40 → 4x ≤ 28 → x ≤ 7. Máximo 7 km.',
+  q6: '18 + x ≤ 50 → x ≤ 32.',
+};
+
+function updateProgress() {
+  const done = Object.keys(answered).length;
+  const allQ = mcQuestions.length + fillQuestions.length;
+  const pct = allQ > 0 ? (done / allQ) * 100 : 0;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-score').textContent = correct + ' / ' + done;
+  if (done === allQ) {
+    const s = document.getElementById('score-summary');
+    s.classList.add('show');
+    document.getElementById('final-score').textContent = correct + ' / ' + allQ;
+    const pct2 = Math.round(correct / allQ * 100);
+    const msgs = [
+      [90, '🏆 ¡Excelente! Dominas las inecuaciones.'],
+      [70, '💪 ¡Muy bien! Repasa los puntos donde fallaste.'],
+      [50, '📚 Buen intento. Revisa los ejemplos y vuelve a intentarlo.'],
+      [0,  '🔁 Repasa la teoría y los ejemplos antes de continuar.'],
+    ];
+    document.getElementById('score-msg').textContent =
+      msgs.find(([t]) => pct2 >= t)[1];
+  }
+}
+
+function check(btn, qid, isCorrect) {
+  if (answered[qid]) return;
+  answered[qid] = true;
+  total++;
+  const btns = document.querySelectorAll(`#${qid} .choice-btn`);
+  btns.forEach(b => {
+    b.disabled = true;
+    if (b === btn) b.classList.add(isCorrect ? 'correct' : 'wrong');
+    if (!isCorrect && b.onclick.toString().includes('true')) b.classList.add('correct');
+  });
+  const fb = document.getElementById(qid + '-fb');
+  if (isCorrect) {
+    correct++;
+    fb.className = 'feedback show ok';
+    fb.innerHTML = '✅ ¡Correcto! ' + (explanations[qid] || '');
+  } else {
+    fb.className = 'feedback show err';
+    fb.innerHTML = '❌ No es correcto. ' + (explanations[qid] || '');
+  }
+  updateProgress();
+}
+
+function normalize(s) {
+  return s.toLowerCase().replace(/\s/g,'').replace(/>=|≥/g,'≥').replace(/<=|≤/g,'≤');
+}
+
+function checkFill(inputId, fbId, accepted) {
+  if (answered[inputId]) return;
+  const val = normalize(document.getElementById(inputId).value);
+  const ok = accepted.some(a => normalize(a) === val);
+  answered[inputId] = true;
+  if (ok) correct++;
+  const fb = document.getElementById(fbId);
+  fb.className = ok ? 'feedback show ok' : 'feedback show err';
+  fb.textContent = ok ? '✅ ¡Correcto!' : '❌ No es correcto. Usa el botón "Ver solución" para revisar.';
+  document.getElementById(inputId).disabled = true;
+  updateProgress();
+}
+
+function showAns(fbId, msg) {
+  const fb = document.getElementById(fbId);
+  fb.className = 'feedback show ok';
+  fb.textContent = '💡 Solución: ' + msg;
+  // count as answered but not correct if not already answered
+  const inputId = fbId.replace('-fb','');
+  if (!answered[inputId]) {
+    answered[inputId] = true;
+    document.getElementById(inputId).disabled = true;
+    updateProgress();
+  }
+}
+
+function toggleSol(btn, id) {
+  const el = document.getElementById(id);
+  const open = el.classList.toggle('open');
+  btn.textContent = (open ? '▼ ' : '▶ ') + 'Ver solución paso a paso';
+}
+</script>
+</body>
+</html>
