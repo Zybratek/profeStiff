@@ -1,0 +1,580 @@
+<style>
+:root {
+  --primary: #0C447C;
+  --secondary: #378ADD;
+  --success: #1D9E75;
+  --danger: #E24B4A;
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --text: #1f2937;
+  --text-light: #6b7280;
+  --border: #e5e7eb;
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  display: flex;
+  justify-content: center;
+}
+
+.app {
+  width: 100%;
+  max-width: 700px;
+  padding: 20px;
+}
+
+/* HEADER */
+.header h2 {
+  font-size: 22px;
+  color: var(--text);
+}
+
+.header p {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-top: 5px;
+}
+
+/* PROGRESS */
+.progress-bar {
+  display: flex;
+  gap: 6px;
+  margin: 20px 0;
+}
+
+.prog-step {
+  flex: 1;
+  height: 6px;
+  background: #ddd;
+  border-radius: 4px;
+}
+
+.prog-step.done {
+  background: var(--success);
+}
+
+.prog-step.active {
+  background: var(--secondary);
+}
+
+/* CARD */
+.scenario-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  margin-bottom: 15px;
+}
+
+.scenario-title {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.scenario-desc {
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+.symptom-badge {
+  margin-top: 10px;
+  display: inline-block;
+  background: #fff3cd;
+  color: #856404;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+/* STEP */
+.step-title {
+  font-size: 12px;
+  color: var(--text-light);
+  text-transform: uppercase;
+}
+
+.step-question {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 10px 0;
+}
+
+.step-hint {
+  font-size: 13px;
+  background: #eef6ff;
+  border-left: 4px solid var(--secondary);
+  padding: 10px;
+  border-radius: 6px;
+}
+
+/* OPTIONS */
+.option-btn {
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #1f2937;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+}
+
+/* 🔵 Hover (cuando pasan el mouse) */
+.option-btn:hover {
+  border-color: #378ADD;
+  background: #f0f7ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* 🟢 Correcto */
+.option-btn.correct {
+  background: #e6f7f1;
+  border-color: #1D9E75;
+  color: #065f46;
+}
+
+/* 🔴 Incorrecto */
+.option-btn.wrong {
+  background: #fdecec;
+  border-color: #E24B4A;
+  color: #7f1d1d;
+}
+
+/* 🚫 Deshabilitado */
+.option-btn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 🔘 Indicador tipo radio */
+.option-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #9ca3af;
+  flex-shrink: 0;
+}
+
+/* Estado correcto */
+.option-btn.correct .option-icon {
+  background: #1D9E75;
+  border-color: #1D9E75;
+}
+
+/* Estado incorrecto */
+.option-btn.wrong .option-icon {
+  background: #E24B4A;
+  border-color: #E24B4A;
+}
+
+/* FEEDBACK */
+.feedback {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  display: none;
+}
+
+.feedback.show {
+  display: block;
+}
+
+.correct-fb {
+  background: #e6f7f1;
+}
+
+.wrong-fb {
+  background: #fdecec;
+}
+
+/* BUTTONS */
+.nav-btn {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-btn.primary {
+  background: var(--primary);
+  color: white;
+}
+
+.nav-btn.primary:hover {
+  background: #0a3561;
+}
+
+/* SUMMARY */
+.summary {
+  text-align: center;
+}
+
+.score-ring {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #eef6ff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 600px) {
+  .app {
+    padding: 15px;
+  }
+
+  .header h2 {
+    font-size: 18px;
+  }
+
+  .step-question {
+    font-size: 15px;
+  }
+
+  .option-btn {
+    font-size: 14px;
+  }
+}
+</style>
+
+<div class="app">
+  <div class="header">
+    <h2>Diagnóstico de robots: laboratorio interactivo</h2>
+    <p>Sigue el algoritmo de fallas y elige la acción correcta en cada paso.</p>
+  </div>
+
+  <div class="progress-bar" id="progress"></div>
+
+  <div id="quiz-panel">
+    <div class="scenario-card" id="scenario-box">
+      <div class="scenario-header">
+        <div class="robot-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-info)" stroke-width="1.5" stroke-linecap="round"><rect x="7" y="10" width="10" height="9" rx="2"/><path d="M10 10V8a2 2 0 014 0v2"/><circle cx="10" cy="14" r="1" fill="var(--color-text-info)"/><circle cx="14" cy="14" r="1" fill="var(--color-text-info)"/><path d="M5 19h14"/></svg>
+        </div>
+        <div>
+          <div class="scenario-title" id="sc-title"></div>
+          <div class="scenario-desc" id="sc-desc"></div>
+        </div>
+      </div>
+      <span class="symptom-badge" id="sc-symptom"></span>
+    </div>
+
+    <div class="step-panel">
+      <div class="step-title" id="step-label"></div>
+      <div class="step-question" id="step-q"></div>
+      <div class="step-hint" id="step-hint" style="display:none"></div>
+      <div class="options" id="options"></div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+
+    <div class="nav-row">
+      <span class="score-chip" id="score-chip">Aciertos: 0 / 0</span>
+      <button class="nav-btn primary" id="next-btn" style="display:none" onclick="nextStep()">Siguiente →</button>
+    </div>
+  </div>
+
+  <div class="summary" id="summary">
+    <div class="score-ring">
+      <span class="num" id="sum-score"></span>
+      <span class="den" id="sum-total"></span>
+    </div>
+    <h3 id="sum-msg"></h3>
+    <p id="sum-sub"></p>
+    <div class="rule-card">
+      <div class="rule">
+        <span>Regla clave:</span><br>
+        Hay voltaje → motor gira → OK<br>
+        Hay voltaje → motor NO gira → <span>motor dañado</span><br>
+        No hay voltaje al motor → revisar <span>puente H y conexiones</span><br>
+        Puente H OK → revisar <span>Arduino</span>
+      </div>
+    </div>
+    <button class="nav-btn primary" style="margin-top:8px" onclick="restart()">Reiniciar práctica ↩</button>
+    <button class="nav-btn" style="margin-top:8px;margin-left:8px" onclick="sendPrompt('Tengo dudas sobre el algoritmo de diagnóstico de robots, ¿puedes explicarme más sobre el puente H?')">Tengo una duda ↗</button>
+  </div>
+</div>
+
+<script>
+const scenarios = [
+  {
+    title: "Robot Explorador",
+    desc: "Funcionaba en la pista de carreras. Se detuvo de golpe.",
+    symptom: "Síntoma: se apagó de repente",
+    steps: [
+      {
+        label: "Paso 1 — Batería",
+        q: "El robot se apagó de repente. ¿Cuál es el primer componente que debes revisar?",
+        hint: "Siempre empieza por la fuente de energía antes de buscar fallas más complejas.",
+        options: [
+          { text: "Revisar el voltaje de la batería con multímetro", correct: true },
+          { text: "Cambiar el Arduino directamente", correct: false },
+          { text: "Reemplazar el motor sin medir nada", correct: false },
+        ],
+        correctFb: "¡Correcto! La batería es siempre el primer paso. Mide el voltaje — si está bajo, recarga o cambia la batería antes de seguir.",
+        wrongFb: "No tan rápido. El algoritmo manda revisar la batería primero. Un voltaje bajo explica el 40% de los paros repentinos.",
+      },
+      {
+        label: "Paso 2 — Resultado de la batería",
+        q: "Mediste la batería: voltaje normal (7.4V en una LiPo de 2S). ¿Qué haces ahora?",
+        hint: "La batería está bien. El problema está más adelante en el circuito.",
+        options: [
+          { text: "Verificar si llega voltaje al motor", correct: true },
+          { text: "Declarar el robot sin solución", correct: false },
+          { text: "Cambiar la batería de todos modos", correct: false },
+        ],
+        correctFb: "Bien. Batería OK → siguiente eslabón de la cadena: ¿le está llegando voltaje al motor?",
+        wrongFb: "Si la batería tiene buen voltaje, no la cambies. Continúa por el algoritmo: revisa si el voltaje llega al motor.",
+      },
+      {
+        label: "Paso 3 — Motor",
+        q: "Mides en los terminales del motor: no llega voltaje. ¿Qué componente revisas a continuación?",
+        hint: "El motor no recibe energía → el problema está antes del motor: el driver (puente H).",
+        options: [
+          { text: "Revisar el puente H (driver L298N o similar)", correct: true },
+          { text: "Cambiar el motor inmediatamente", correct: false },
+          { text: "Revisar solo las ruedas", correct: false },
+        ],
+        correctFb: "¡Exacto! Si NO llega voltaje al motor, el culpable está antes: el puente H. Revísalo con TVO (tacto-temperatura, vista, olfato-quemado).",
+        wrongFb: "Si no llega voltaje al motor, el motor no es culpable. La falla está antes: el puente H no está entregando energía.",
+      },
+      {
+        label: "Paso 4 — Puente H",
+        q: "El puente H está caliente y huele quemado. ¿Qué acción tomas?",
+        hint: "TVO positivo (calor + olor) = componente dañado. Aquí hay una sola respuesta correcta.",
+        options: [
+          { text: "Reemplazar el puente H por uno nuevo", correct: true },
+          { text: "Enfriar con soplido y seguir usando", correct: false },
+          { text: "Cambiar el Arduino primero", correct: false },
+        ],
+        correctFb: "Perfecto. TVO positivo = puente H dañado → reemplazar. Nunca uses un componente quemado: puede dañar el Arduino o la batería.",
+        wrongFb: "Un puente H caliente y con olor a quemado está dañado. Enfriarlo no lo repara. Hay que reemplazarlo.",
+      },
+    ]
+  },
+  {
+    title: "Robot Brazo",
+    desc: "Terminó una rutina y al reiniciar, el motor no gira.",
+    symptom: "Síntoma: motor no responde",
+    steps: [
+      {
+        label: "Paso 1 — Batería",
+        q: "El brazo robótico no responde. Siguiendo el algoritmo, ¿cuál es tu primer movimiento?",
+        hint: "El orden del algoritmo no cambia: siempre batería primero.",
+        options: [
+          { text: "Medir voltaje de la batería", correct: true },
+          { text: "Cambiar el motor por uno nuevo", correct: false },
+          { text: "Revisar el código del Arduino", correct: false },
+        ],
+        correctFb: "Correcto. Batería primero, siempre. El código puede tener bugs, pero sin energía nada funciona.",
+        wrongFb: "Antes de revisar código o motores, comprueba la fuente de energía. La batería es el paso uno del algoritmo.",
+      },
+      {
+        label: "Paso 2 — Voltaje al motor",
+        q: "Batería en buen estado. Mides los terminales del motor y SÍ llega voltaje normal. El motor no gira. ¿Cuál es el diagnóstico?",
+        hint: "Recuerda la regla clave: hay voltaje pero no hay movimiento.",
+        options: [
+          { text: "El motor está dañado", correct: true },
+          { text: "El puente H falla", correct: false },
+          { text: "La batería está baja", correct: false },
+        ],
+        correctFb: "¡Correcto! Regla clave: hay voltaje → motor no gira → motor dañado. Puede tener bobina quemada o eje atascado mecánicamente.",
+        wrongFb: "Si hay voltaje pero el motor no gira, el puente H está funcionando (entrega energía). El problema es el motor.",
+      },
+      {
+        label: "Paso 3 — Reemplazo",
+        q: "Confirmaste que el motor está dañado. ¿Cómo lo verificas antes de pedir un motor nuevo?",
+        hint: "Antes de pedir piezas, conviene confirmar con una prueba rápida.",
+        options: [
+          { text: "Conectar un motor bueno al mismo circuito y ver si gira", correct: true },
+          { text: "Medir el voltaje de la batería otra vez", correct: false },
+          { text: "Cambiar el puente H también por si acaso", correct: false },
+        ],
+        correctFb: "Excelente técnica. Sustituir con un componente conocido-bueno es el método más rápido para confirmar una falla. Si el motor nuevo gira, el original estaba dañado.",
+        wrongFb: "Ya mediste la batería y está bien. Cambiar el puente H sin razón es costoso. La forma correcta es probar con un motor que sabes que funciona.",
+      },
+    ]
+  },
+  {
+    title: "Robot Seguidor de línea",
+    desc: "El motor derecho gira, el izquierdo no. Batería cargada.",
+    symptom: "Síntoma: un motor no responde",
+    steps: [
+      {
+        label: "Paso 1 — Localizar el circuito",
+        q: "Un motor gira bien y el otro no, con la misma batería. ¿Qué parte del circuito revisas primero para el motor izquierdo?",
+        hint: "Si un canal funciona y el otro no, el problema está en ese canal específico.",
+        options: [
+          { text: "Verificar si llega voltaje al terminal del motor izquierdo", correct: true },
+          { text: "Cambiar la batería aunque esté cargada", correct: false },
+          { text: "Cambiar el Arduino sin medir", correct: false },
+        ],
+        correctFb: "Correcto. El motor derecho gira → batería y Arduino parecen ok. Sigue el hilo: ¿llega voltaje al motor izquierdo?",
+        wrongFb: "Si el motor derecho gira, la batería y el Arduino están funcionando para ese canal. El problema es específico al circuito del motor izquierdo.",
+      },
+      {
+        label: "Paso 2 — Resultado de la medición",
+        q: "Mides: sí llega voltaje al motor izquierdo pero no gira. La regla clave dice...",
+        hint: "¿Recuerdas la regla? Hay voltaje y no gira → ...",
+        options: [
+          { text: "Motor izquierdo dañado → reemplazar", correct: true },
+          { text: "Puente H dañado en ese canal", correct: false },
+          { text: "Conexión suelta en la batería", correct: false },
+        ],
+        correctFb: "¡Perfecto! Voltaje presente + motor sin movimiento = motor dañado. Regla clave aplicada correctamente.",
+        wrongFb: "Si llega voltaje, el puente H está entregando energía correctamente. El motor es el que no responde aunque recibe energía.",
+      },
+      {
+        label: "Paso 3 — Descarte de Arduino",
+        q: "Reemplazas el motor y el robot sigue sin avanzar en línea recta. ¿Qué haces ahora?",
+        hint: "Ya revisaste batería, motor y puente H. ¿Qué queda en el algoritmo?",
+        options: [
+          { text: "Verificar el Arduino: cambiar por uno funcional con el mismo código", correct: true },
+          { text: "Cambiar la batería una vez más", correct: false },
+          { text: "Volver a cambiar el motor", correct: false },
+        ],
+        correctFb: "¡Excelente! Batería ✓, Motor ✓, Puente H aparentemente ok → último paso del algoritmo: verificar el Arduino. Cámbialo por uno funcional con el mismo código y reconecta.",
+        wrongFb: "Ya descartaste batería y motor. El algoritmo señala al Arduino como el siguiente componente a verificar cuando los anteriores están ok.",
+      },
+    ]
+  },
+];
+
+let scenarioIdx = 0;
+let stepIdx = 0;
+let score = 0;
+let totalQ = 0;
+let answered = false;
+
+function scenario() { return scenarios[scenarioIdx]; }
+function step() { return scenario().steps[stepIdx]; }
+function totalSteps() { return scenarios.reduce((a,s)=>a+s.steps.length,0); }
+function stepsBeforeScenario(si) { return scenarios.slice(0,si).reduce((a,s)=>a+s.steps.length,0); }
+function globalStep() { return stepsBeforeScenario(scenarioIdx)+stepIdx; }
+
+function renderProgress() {
+  const bar = document.getElementById('progress');
+  const total = totalSteps();
+  bar.innerHTML = '';
+  for(let i=0;i<total;i++) {
+    const d = document.createElement('div');
+    d.className = 'prog-step';
+    if(i < globalStep()) d.classList.add('done');
+    else if(i === globalStep()) d.classList.add('active');
+    bar.appendChild(d);
+  }
+}
+
+function renderStep() {
+  answered = false;
+  const sc = scenario();
+  const st = step();
+  document.getElementById('sc-title').textContent = sc.title;
+  document.getElementById('sc-desc').textContent = sc.desc;
+  document.getElementById('sc-symptom').textContent = sc.symptom;
+  document.getElementById('step-label').textContent = st.label;
+  document.getElementById('step-q').textContent = st.q;
+  const hintEl = document.getElementById('step-hint');
+  if(st.hint) { hintEl.textContent = st.hint; hintEl.style.display='block'; }
+  else { hintEl.style.display='none'; }
+
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  const shuffled = [...st.options].sort(()=>Math.random()-0.5);
+  shuffled.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-icon"></span>${opt.text}`;
+    btn.onclick = () => selectOption(opt.correct, btn, st);
+    opts.appendChild(btn);
+  });
+
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('feedback').innerHTML = '';
+  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('score-chip').textContent = `Aciertos: ${score} / ${totalQ}`;
+  renderProgress();
+}
+
+function selectOption(correct, btn, st) {
+  if(answered) return;
+  answered = true;
+  totalQ++;
+  const allBtns = document.querySelectorAll('.option-btn');
+  allBtns.forEach(b => {
+    b.classList.add('disabled');
+  });
+  const fb = document.getElementById('feedback');
+  if(correct) {
+    score++;
+    btn.classList.add('correct');
+    fb.className = 'feedback show correct-fb';
+    fb.innerHTML = `<strong>Correcto</strong>${st.correctFb}`;
+  } else {
+    btn.classList.add('wrong');
+    allBtns.forEach(b => {
+      if(b.textContent.trim().includes(st.options.find(o=>o.correct).text)) b.classList.add('correct');
+    });
+    fb.className = 'feedback show wrong-fb';
+    fb.innerHTML = `<strong>No exactamente</strong>${st.wrongFb}`;
+  }
+  document.getElementById('score-chip').textContent = `Aciertos: ${score} / ${totalQ}`;
+  document.getElementById('next-btn').style.display = 'block';
+}
+
+function nextStep() {
+  stepIdx++;
+  if(stepIdx >= scenario().steps.length) {
+    scenarioIdx++;
+    stepIdx = 0;
+    if(scenarioIdx >= scenarios.length) {
+      showSummary();
+      return;
+    }
+  }
+  renderStep();
+}
+
+function showSummary() {
+  document.getElementById('quiz-panel').style.display = 'none';
+  const sum = document.getElementById('summary');
+  sum.className = 'summary show';
+  document.getElementById('sum-score').textContent = score;
+  document.getElementById('sum-total').textContent = '/ '+totalQ;
+  const pct = Math.round(score/totalQ*100);
+  if(pct >= 80) {
+    document.getElementById('sum-msg').textContent = '¡Excelente diagnóstico!';
+    document.getElementById('sum-sub').textContent = 'Tu equipo domina el algoritmo. Están listos para diagnosticar robots reales.';
+  } else if(pct >= 50) {
+    document.getElementById('sum-msg').textContent = 'Buen intento — hay pasos que repasar';
+    document.getElementById('sum-sub').textContent = 'Revisa la regla clave y el orden del algoritmo antes de practicar con hardware.';
+  } else {
+    document.getElementById('sum-msg').textContent = 'Sigue practicando el algoritmo';
+    document.getElementById('sum-sub').textContent = 'Repasa los pasos con tu equipo y vuelve a intentarlo.';
+  }
+}
+
+function restart() {
+  scenarioIdx = 0; stepIdx = 0; score = 0; totalQ = 0; answered = false;
+  document.getElementById('quiz-panel').style.display = 'block';
+  document.getElementById('summary').className = 'summary';
+  renderStep();
+}
+
+renderStep();
+</script>
