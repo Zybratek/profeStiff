@@ -1,0 +1,543 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:'Nunito',sans-serif;
+  background:#f0f4ff;
+}
+
+.screen{display:none}
+.screen.active{display:block}
+
+.wrap{padding:12px 10px 24px}
+
+/* ===== HERO PORTADA ===== */
+.hero-portada{
+  background:linear-gradient(135deg,#6c63ff 0%,#e040fb 60%,#ff6b6b 100%);
+  border-radius:24px;
+  padding:40px 24px 36px;
+  text-align:center;
+  margin-bottom:22px;
+  box-shadow:0 8px 32px rgba(108,99,255,0.35);
+  position:relative;
+  overflow:hidden;
+}
+.hero-portada::before{
+  content:'';position:absolute;top:-50px;right:-50px;
+  width:180px;height:180px;border-radius:50%;
+  background:rgba(255,255,255,0.12);
+}
+.hero-portada::after{
+  content:'';position:absolute;bottom:-40px;left:-40px;
+  width:140px;height:140px;border-radius:50%;
+  background:rgba(255,255,255,0.09);
+}
+.hero-icon-big{font-size:72px;display:block;margin-bottom:14px;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.2))}
+.hero-portada h1{
+  font-size:30px;font-weight:900;color:#fff;
+  text-shadow:0 2px 8px rgba(0,0,0,0.2);
+  margin-bottom:10px;line-height:1.2;
+}
+.hero-portada p{font-size:15px;color:rgba(255,255,255,0.9);line-height:1.6}
+
+/* ===== PROGRESS ===== */
+.prog-wrap{display:flex;align-items:center;gap:6px;margin-bottom:20px}
+.prog-seg{height:10px;flex:1;border-radius:6px;background:#dde3ff;transition:all .35s ease}
+.prog-seg.done{background:linear-gradient(90deg,#43e97b,#38f9d7)}
+.prog-seg.active{background:linear-gradient(90deg,#6c63ff,#e040fb);box-shadow:0 2px 8px rgba(108,99,255,0.4)}
+.prog-label{font-size:12px;font-weight:700;color:#6c63ff;white-space:nowrap}
+
+/* ===== SECTION HEADER ===== */
+.sec-head{margin-bottom:18px}
+.sec-title{font-size:22px;font-weight:900;color:#2d2b6b;margin-bottom:4px}
+.sec-sub{font-size:14px;color:#7b7fa8;font-weight:600}
+
+/* ===== CARDS ===== */
+.card{
+  background:#fff;
+  border-radius:18px;
+  padding:18px 20px;
+  margin-bottom:14px;
+  box-shadow:0 4px 16px rgba(108,99,255,0.10);
+  border:2px solid #eceeff;
+}
+.card-purple{background:linear-gradient(135deg,#f0efff,#e8e6ff);border:2px solid #c5c0ff}
+.card-teal{background:linear-gradient(135deg,#e0fdf4,#ccfbef);border:2px solid #6ee7b7}
+.card-amber{background:linear-gradient(135deg,#fffbeb,#fef3c7);border:2px solid #fcd34d}
+.card-coral{background:linear-gradient(135deg,#fff1f0,#ffe4e1);border:2px solid #fca5a5}
+.card-green{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #86efac}
+.card-pink{background:linear-gradient(135deg,#fdf2f8,#fce7f3);border:2px solid #f9a8d4}
+.card-blue{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:2px solid #93c5fd}
+
+.card-title{font-size:16px;font-weight:800;color:#2d2b6b;margin-bottom:6px}
+.card-text{font-size:14px;color:#4a4a7a;line-height:1.75;font-weight:600}
+
+/* ===== STEPS ===== */
+.step{
+  display:flex;align-items:flex-start;gap:14px;
+  background:#fff;border-radius:16px;padding:14px 16px;
+  margin-bottom:10px;
+  border:2px solid #eceeff;
+  box-shadow:0 3px 10px rgba(108,99,255,0.07);
+  transition:transform .15s,box-shadow .15s;
+}
+.step:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(108,99,255,0.14)}
+.step-badge{
+  width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(135deg,#6c63ff,#a855f7);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:900;color:#fff;flex-shrink:0;
+  box-shadow:0 3px 8px rgba(108,99,255,0.35);
+}
+.step-badge.final{background:linear-gradient(135deg,#10b981,#34d399)}
+.step-tag{font-size:11px;font-weight:800;color:#6c63ff;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.step-tag.final{color:#059669}
+.step-desc{font-size:14px;color:#2d2b6b;font-weight:600;line-height:1.5}
+
+/* ===== TAGS ===== */
+.pill{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:6px 14px;border-radius:24px;
+  font-size:12px;font-weight:800;margin:4px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.10);
+}
+.pill-purple{background:linear-gradient(135deg,#6c63ff,#a855f7);color:#fff}
+.pill-teal{background:linear-gradient(135deg,#10b981,#34d399);color:#fff}
+.pill-coral{background:linear-gradient(135deg,#f97316,#fb923c);color:#fff}
+.pill-pink{background:linear-gradient(135deg,#ec4899,#f472b6);color:#fff}
+.pill-amber{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#fff}
+
+/* ===== BUTTONS ===== */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:13px 26px;border-radius:14px;
+  font-size:15px;font-weight:800;cursor:pointer;border:none;
+  transition:transform .15s,box-shadow .15s;
+  font-family:'Nunito',sans-serif;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:scale(0.96)}
+.btn-primary{
+  background:linear-gradient(135deg,#6c63ff,#a855f7);color:#fff;
+  box-shadow:0 4px 15px rgba(108,99,255,0.4);
+}
+.btn-primary:hover{box-shadow:0 6px 20px rgba(108,99,255,0.5)}
+.btn-green{
+  background:linear-gradient(135deg,#10b981,#34d399);color:#fff;
+  box-shadow:0 4px 15px rgba(16,185,129,0.35);
+}
+.btn-ghost{
+  background:#fff;color:#6c63ff;
+  border:2px solid #c5c0ff;
+  box-shadow:0 2px 8px rgba(108,99,255,0.10);
+}
+.btn-ghost:hover{background:#f0efff}
+
+/* ===== MACHINE SVG CONTAINER ===== */
+.machine-bg{
+  background:linear-gradient(135deg,#f8f7ff,#eef2ff);
+  border-radius:20px;padding:16px;margin-bottom:16px;
+  border:2px solid #ddd6fe;
+  box-shadow:0 4px 16px rgba(108,99,255,0.10);
+}
+
+/* ===== QUIZ ===== */
+.q-wrap{background:#fff;border-radius:20px;padding:22px 20px;margin-bottom:14px;box-shadow:0 4px 16px rgba(108,99,255,0.10);border:2px solid #eceeff}
+.q-badge{display:inline-block;background:linear-gradient(135deg,#6c63ff,#a855f7);color:#fff;border-radius:20px;padding:4px 14px;font-size:12px;font-weight:800;margin-bottom:12px}
+.q-text{font-size:16px;font-weight:800;color:#2d2b6b;margin-bottom:18px;line-height:1.5}
+.opt{
+  display:block;width:100%;text-align:left;
+  padding:13px 18px;margin-bottom:9px;
+  background:#f8f7ff;border:2px solid #ddd6fe;
+  border-radius:13px;font-size:14px;font-weight:700;
+  color:#2d2b6b;cursor:pointer;
+  font-family:'Nunito',sans-serif;
+  transition:all .15s;
+}
+.opt:hover{background:#eee9ff;border-color:#a5b4fc;transform:translateX(3px)}
+.opt.correct{background:linear-gradient(135deg,#d1fae5,#a7f3d0);border-color:#34d399;color:#065f46}
+.opt.wrong{background:linear-gradient(135deg,#fee2e2,#fecaca);border-color:#f87171;color:#7f1d1d}
+.opt:disabled{cursor:default;transform:none}
+.fb{border-radius:13px;padding:13px 16px;font-size:14px;font-weight:700;line-height:1.6;margin-top:6px}
+.fb.ok{background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#065f46;border:2px solid #34d399}
+.fb.no{background:linear-gradient(135deg,#fee2e2,#fecaca);color:#7f1d1d;border:2px solid #f87171}
+
+/* ===== SCORE FINAL ===== */
+.score-hero{
+  background:linear-gradient(135deg,#6c63ff 0%,#e040fb 50%,#10b981 100%);
+  border-radius:24px;padding:36px 24px;text-align:center;
+  margin-bottom:20px;
+  box-shadow:0 8px 30px rgba(108,99,255,0.35);
+}
+.medal-big{font-size:72px;display:block;margin-bottom:8px;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.25))}
+.score-num{font-size:60px;font-weight:900;color:#fff;line-height:1;text-shadow:0 2px 10px rgba(0,0,0,0.2)}
+.score-of{font-size:22px;color:rgba(255,255,255,0.75);font-weight:700}
+.score-msg{font-size:16px;color:#fff;margin-top:10px;font-weight:700}
+
+/* ===== THREE GRID ===== */
+.three-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px}
+.mini{border-radius:18px;padding:18px 12px;text-align:center;box-shadow:0 4px 14px rgba(0,0,0,0.08)}
+.mini-icon{font-size:32px;display:block;margin-bottom:8px}
+.mini-title{font-size:13px;font-weight:800;margin-bottom:4px}
+.mini-desc{font-size:12px;font-weight:600;line-height:1.4}
+
+/* ===== ANIMATION ===== */
+@keyframes roll{
+  0%{cx:58;cy:86}
+  15%{cx:155;cy:86}
+  21%{cx:155;cy:150}
+  35%{cx:270;cy:150}
+  41%{cx:270;cy:210}
+  55%{cx:385;cy:210}
+  61%{cx:385;cy:268}
+  75%{cx:500;cy:268}
+  81%{cx:500;cy:316}
+  100%{cx:596;cy:316}
+}
+.rolling #gb2{animation:roll 5s linear forwards}
+
+.nav-row{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
+</style>
+
+<div class="wrap">
+
+<!-- PANTALLA 0: PORTADA -->
+<div id="p0" class="screen active">
+  <div class="hero-portada">
+    <span class="hero-icon-big">⚙️</span>
+    <h1>La Máquina de Goldberg</h1>
+    <p>¡La máquina más loca, divertida<br>y creativa del mundo!</p>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;justify-content:center;margin-bottom:20px">
+    <span class="pill pill-purple">⚙️ Engranajes</span>
+    <span class="pill pill-teal">🔗 Reacciones</span>
+    <span class="pill pill-coral">🎱 Física</span>
+    <span class="pill pill-pink">🎪 Creatividad</span>
+    <span class="pill pill-amber">🧠 Ciencia</span>
+  </div>
+  <div class="card" style="display:flex;align-items:center;gap:16px">
+    <span style="font-size:38px">🚀</span>
+    <p class="card-text">¡Hola! Hoy aprenderemos sobre una máquina que hace las cosas más simples de la manera más <strong style="color:#6c63ff">complicada y divertida</strong> posible. ¿Listos?</p>
+  </div>
+  <button class="btn btn-primary" style="width:100%;padding:16px;font-size:16px" onclick="go('p1')">¡Comenzar la aventura! 🚀</button>
+</div>
+
+<!-- PANTALLA 1: RUBE GOLDBERG -->
+<div id="p1" class="screen">
+  <div class="prog-wrap" id="pb1"></div>
+  <div class="sec-head">
+    <p class="sec-title">¿Quién fue Rube Goldberg?</p>
+    <p class="sec-sub">El artista detrás de las máquinas más locas</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+    <div class="card card-purple" style="text-align:center;padding:20px 14px">
+      <span style="font-size:44px;display:block;margin-bottom:10px">🎨</span>
+      <p class="card-title" style="color:#4c1d95">Dibujante</p>
+      <p class="card-text" style="color:#5b21b6;font-size:13px">Creaba dibujos graciosos en los periódicos</p>
+    </div>
+    <div class="card card-coral" style="text-align:center;padding:20px 14px">
+      <span style="font-size:44px;display:block;margin-bottom:10px">😄</span>
+      <p class="card-title" style="color:#9a3412">Humorista</p>
+      <p class="card-text" style="color:#c2410c;font-size:13px">Sus máquinas hacían reír a todos</p>
+    </div>
+  </div>
+  <div class="card">
+    <p class="card-title">🇺🇸 Rube Goldberg (1883 – 1970)</p>
+    <p class="card-text">Era un <strong style="color:#6c63ff">dibujante estadounidense</strong> que inventó (¡en papel!) máquinas ridículas para hacer cosas sencillísimas. Sus dibujos se hicieron tan famosos que <strong style="color:#6c63ff">pusieron su nombre</strong> a estas máquinas.</p>
+  </div>
+  <div class="card card-teal">
+    <p class="card-text" style="color:#065f46">💡 <strong>Dato curioso:</strong> Rube Goldberg <em>nunca construyó</em> sus máquinas en la vida real. ¡Solo las dibujaba! Fue la gente que las vio quien empezó a construirlas de verdad.</p>
+  </div>
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="go('p0')">← Atrás</button>
+    <button class="btn btn-primary" onclick="go('p2')">Siguiente →</button>
+  </div>
+</div>
+
+<!-- PANTALLA 2: QUÉ ES -->
+<div id="p2" class="screen">
+  <div class="prog-wrap" id="pb2"></div>
+  <div class="sec-head">
+    <p class="sec-title">¿Qué hace esta máquina?</p>
+    <p class="sec-sub">Una cadena de reacciones para algo muy simple</p>
+  </div>
+  <div class="card card-blue">
+    <p class="card-text" style="color:#1e3a8a;font-size:15px">Imagina que quieres <strong>encender una luz</strong>. Podrías apretar el interruptor... ¡pero eso es demasiado aburrido! 😴 Una máquina de Goldberg lo haría así:</p>
+  </div>
+  <div class="step">
+    <div class="step-badge">1</div>
+    <div><div class="step-tag">Disparador</div><div class="step-desc">🐱 El gato mueve la cola y empuja una pelota</div></div>
+  </div>
+  <div class="step">
+    <div class="step-badge">2</div>
+    <div><div class="step-tag">Paso 1</div><div class="step-desc">🎱 La pelota rueda y choca contra unos libros</div></div>
+  </div>
+  <div class="step">
+    <div class="step-badge">3</div>
+    <div><div class="step-tag">Paso 2</div><div class="step-desc">📚 Los libros caen y jalan una cuerda</div></div>
+  </div>
+  <div class="step">
+    <div class="step-badge">4</div>
+    <div><div class="step-tag">Paso 3</div><div class="step-desc">🪢 La cuerda mueve un brazo metálico</div></div>
+  </div>
+  <div class="step" style="border-color:#6ee7b7;background:linear-gradient(135deg,#f0fdf4,#dcfce7)">
+    <div class="step-badge final">✓</div>
+    <div><div class="step-tag final">¡Meta lograda!</div><div class="step-desc" style="color:#065f46">💡 El brazo metálico enciende la luz</div></div>
+  </div>
+  <div class="card card-amber" style="margin-top:4px">
+    <p class="card-text" style="color:#92400e">🎯 Eso se llama <strong>reacción en cadena</strong>: cada paso activa al siguiente, ¡igual que el dominó!</p>
+  </div>
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="go('p1')">← Atrás</button>
+    <button class="btn btn-primary" onclick="go('p3')">Siguiente →</button>
+  </div>
+</div>
+
+<!-- PANTALLA 3: ANIMACIÓN -->
+<div id="p3" class="screen">
+  <div class="prog-wrap" id="pb3"></div>
+  <div class="sec-head">
+    <p class="sec-title">¡Mírala funcionar!</p>
+    <p class="sec-sub">Presiona el botón y observa la magia</p>
+  </div>
+  <div class="machine-bg">
+    <svg id="msv2" style="width:100%;display:block" viewBox="0 0 640 380">
+      <rect x="0" y="0" width="640" height="380" rx="12" fill="url(#bggrad)"/>
+      <defs>
+        <linearGradient id="bggrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#f8f7ff"/>
+          <stop offset="100%" stop-color="#eef2ff"/>
+        </linearGradient>
+        <linearGradient id="rampG" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#6c63ff"/>
+          <stop offset="100%" stop-color="#a855f7"/>
+        </linearGradient>
+      </defs>
+      <rect x="30" y="94" width="132" height="10" rx="5" fill="#6c63ff" opacity=".6"/>
+      <rect x="150" y="94" width="10" height="64" rx="5" fill="#6c63ff" opacity=".4"/>
+      <rect x="150" y="150" width="132" height="10" rx="5" fill="#a855f7" opacity=".6"/>
+      <rect x="270" y="150" width="10" height="64" rx="5" fill="#a855f7" opacity=".4"/>
+      <rect x="270" y="206" width="132" height="10" rx="5" fill="#e040fb" opacity=".6"/>
+      <rect x="390" y="206" width="10" height="64" rx="5" fill="#e040fb" opacity=".4"/>
+      <rect x="390" y="262" width="132" height="10" rx="5" fill="#f97316" opacity=".6"/>
+      <rect x="510" y="262" width="10" height="60" rx="5" fill="#f97316" opacity=".4"/>
+      <rect x="510" y="308" width="112" height="10" rx="5" fill="#10b981" opacity=".6"/>
+
+      <rect x="44" y="66" width="88" height="25" rx="10" fill="#fff" stroke="#c5c0ff" stroke-width="1.5"/>
+      <text x="88" y="83" text-anchor="middle" font-size="12" fill="#4c1d95" font-family="Nunito,sans-serif" font-weight="800">🎱 Inicio</text>
+
+      <rect x="163" y="122" width="95" height="25" rx="10" fill="#fff" stroke="#fcd34d" stroke-width="1.5"/>
+      <text x="210" y="139" text-anchor="middle" font-size="12" fill="#92400e" font-family="Nunito,sans-serif" font-weight="800">🔨 Palanca</text>
+
+      <rect x="283" y="178" width="95" height="25" rx="10" fill="#fff" stroke="#6ee7b7" stroke-width="1.5"/>
+      <text x="330" y="195" text-anchor="middle" font-size="12" fill="#065f46" font-family="Nunito,sans-serif" font-weight="800">📢 Campana</text>
+
+      <rect x="403" y="234" width="105" height="25" rx="10" fill="#fff" stroke="#fca5a5" stroke-width="1.5"/>
+      <text x="455" y="251" text-anchor="middle" font-size="12" fill="#9a3412" font-family="Nunito,sans-serif" font-weight="800">⚙️ Engranaje</text>
+
+      <rect x="520" y="280" width="88" height="25" rx="10" fill="#fff" stroke="#86efac" stroke-width="1.5"/>
+      <text x="564" y="297" text-anchor="middle" font-size="12" fill="#065f46" font-family="Nunito,sans-serif" font-weight="800">💡 ¡Meta!</text>
+
+      <circle id="gb2" cx="58" cy="86" r="14" fill="url(#rampG)" stroke="#fff" stroke-width="2.5"/>
+    </svg>
+  </div>
+  <button class="btn btn-primary" id="pb2x" onclick="play2()" style="width:100%;padding:15px;font-size:15px">▶ ¡Activar la máquina!</button>
+  <p id="mm2" style="text-align:center;font-size:14px;font-weight:700;color:#6c63ff;margin-top:10px;min-height:22px"></p>
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="go('p2')">← Atrás</button>
+    <button class="btn btn-primary" onclick="go('p4')">Siguiente →</button>
+  </div>
+</div>
+
+<!-- PANTALLA 4: 3 PARTES -->
+<div id="p4" class="screen">
+  <div class="prog-wrap" id="pb4"></div>
+  <div class="sec-head">
+    <p class="sec-title">Las 3 partes de toda máquina</p>
+    <p class="sec-sub">¡Apréndetelas y diseña la tuya!</p>
+  </div>
+  <div class="three-grid">
+    <div class="mini" style="background:linear-gradient(135deg,#f0efff,#e8e6ff);border:2px solid #c5c0ff">
+      <span class="mini-icon">⚡</span>
+      <p class="mini-title" style="color:#4c1d95">Disparador</p>
+      <p class="mini-desc" style="color:#5b21b6">Lo que hace que todo empiece</p>
+    </div>
+    <div class="mini" style="background:linear-gradient(135deg,#e0fdf4,#ccfbef);border:2px solid #6ee7b7">
+      <span class="mini-icon">🔗</span>
+      <p class="mini-title" style="color:#065f46">Pasos</p>
+      <p class="mini-desc" style="color:#047857">La cadena de reacciones</p>
+    </div>
+    <div class="mini" style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border:2px solid #fcd34d">
+      <span class="mini-icon">🎯</span>
+      <p class="mini-title" style="color:#92400e">Meta</p>
+      <p class="mini-desc" style="color:#b45309">El resultado final</p>
+    </div>
+  </div>
+  <div class="card" style="border-left:5px solid #6c63ff;border-radius:0 18px 18px 0">
+    <p class="card-title" style="color:#4c1d95">⚡ El disparador</p>
+    <p class="card-text">El primer empujoncito que hace que todo se mueva. Puede ser una pelota, jalar una cuerda... ¡Sin él, nada ocurre!</p>
+  </div>
+  <div class="card" style="border-left:5px solid #10b981;border-radius:0 18px 18px 0">
+    <p class="card-title" style="color:#065f46">🔗 Los pasos intermedios</p>
+    <p class="card-text">Como un dominó gigante: cada pieza activa a la siguiente. ¡Cuantos más pasos, más emocionante!</p>
+  </div>
+  <div class="card" style="border-left:5px solid #f59e0b;border-radius:0 18px 18px 0">
+    <p class="card-title" style="color:#92400e">🎯 La meta</p>
+    <p class="card-text">Lo que queremos que pase al final: regar una planta, sonar una campana, o encender una luz.</p>
+  </div>
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="go('p3')">← Atrás</button>
+    <button class="btn btn-green" onclick="go('p5')">¡Al quiz! 🧠 →</button>
+  </div>
+</div>
+
+<!-- PANTALLA 5: QUIZ -->
+<div id="p5" class="screen">
+  <div class="prog-wrap" id="pb5"></div>
+  <div class="sec-head">
+    <p class="sec-title">🧠 ¡Demuestra lo que sabes!</p>
+    <p class="sec-sub">5 preguntas. ¡Tú puedes lograrlo!</p>
+  </div>
+  <div id="qbox2"></div>
+  <div id="qnav2" style="display:none" class="nav-row">
+    <button class="btn btn-ghost" onclick="go('p4')">← Atrás</button>
+    <button class="btn btn-primary" id="nxtQ2" onclick="nxt2()" style="display:none">Siguiente →</button>
+    <button class="btn btn-green" id="finQ2" onclick="go('p6')" style="display:none">Ver resultado 🏆</button>
+  </div>
+</div>
+
+<!-- PANTALLA 6: RESULTADO -->
+<div id="p6" class="screen">
+  <div class="score-hero" id="sh2"></div>
+  <div class="card">
+    <p class="card-title" style="margin-bottom:14px">📌 Lo que aprendiste hoy:</p>
+    <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px">
+      <span style="font-size:20px">✅</span>
+      <p class="card-text">Una máquina de Goldberg hace algo <strong style="color:#6c63ff">simple</strong> de forma <strong style="color:#6c63ff">complicada y divertida</strong>.</p>
+    </div>
+    <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px">
+      <span style="font-size:20px">✅</span>
+      <p class="card-text">Usa una <strong style="color:#6c63ff">reacción en cadena</strong>: cada paso activa al siguiente.</p>
+    </div>
+    <div style="display:flex;gap:10px;align-items:flex-start">
+      <span style="font-size:20px">✅</span>
+      <p class="card-text">La inventó (en papel) <strong style="color:#6c63ff">Rube Goldberg</strong>, un dibujante muy creativo.</p>
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <button class="btn btn-primary" style="flex:1;padding:14px" onclick="restart2()">🔄 Repetir clase</button>
+    <button class="btn btn-ghost" style="flex:1;padding:14px" onclick="go('p5')">📝 Repetir quiz</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+const QQ=[
+  {q:"¿Quién le dio su nombre a estas máquinas locas?",opts:["Albert Einstein","Isaac Newton","Rube Goldberg","Thomas Edison"],c:2,e:"¡Correcto! Rube Goldberg era un dibujante que hacía reír a todos con sus máquinas imposibles dibujadas en papel."},
+  {q:"¿Para qué sirve una máquina de Goldberg?",opts:["Para volar al espacio","Para hacer cosas simples de forma complicada y divertida","Para cocinar comida rápido","Para hacer tareas difíciles más fáciles"],c:1,e:"¡Exacto! La gracia está en hacer algo sencillo (como encender la luz) con muchos pasos graciosos."},
+  {q:"¿Cómo se llama cuando un paso activa al siguiente, igual que el dominó?",opts:["Explosión en cadena","Reacción en cadena","Magia del dominó","Efecto rebote"],c:1,e:"¡Muy bien! Reacción en cadena: una pieza cae y empuja a la siguiente hasta llegar al final."},
+  {q:"¿Qué es el 'disparador' en una máquina de Goldberg?",opts:["El resultado final","Los pasos del medio","Lo que hace que todo empiece","El nombre del inventor"],c:2,e:"¡Correcto! El disparador es el primer paso, el que pone todo en marcha. ¡Sin él, nada se mueve!"},
+  {q:"Haces una máquina para regar una planta. ¿Cuál es la META?",opts:["Empujar una pelota al inicio","Jalar una cuerda","Un dominó cayendo","El agua cayendo sobre la planta"],c:3,e:"¡Genial! La meta es lo que quieres lograr al final: el agua regando la planta."}
+];
+let cur2=0,sc2=0,busy2=false;
+
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  buildPB(id);
+  if(id==='p5')rQ2();
+}
+
+function buildPB(id){
+  const map={p1:0,p2:1,p3:2,p4:3,p5:4,p6:5};
+  const total=6;
+  ['pb1','pb2','pb3','pb4','pb5'].forEach(pid=>{
+    const el=document.getElementById(pid);
+    if(!el)return;
+    el.innerHTML='';
+    const idx=map[id]??0;
+    for(let i=0;i<total;i++){
+      const d=document.createElement('div');
+      d.className='prog-seg'+(i<idx?' done':i===idx?' active':'');
+      el.appendChild(d);
+    }
+    const lbl=document.createElement('span');
+    lbl.className='prog-label';
+    lbl.textContent=`${idx+1}/6`;
+    el.appendChild(lbl);
+  });
+}
+
+function rQ2(){
+  if(cur2>=QQ.length){go('p6');return}
+  const q=QQ[cur2];
+  const box=document.getElementById('qbox2');
+  let h=`<div class="q-wrap"><span class="q-badge">Pregunta ${cur2+1} de ${QQ.length}</span><p class="q-text">${q.q}</p>`;
+  q.opts.forEach((o,i)=>{h+=`<button class="opt" id="oo${i}" onclick="ans2(${i})">${o}</button>`});
+  h+=`<div id="fb2" class="fb" style="display:none"></div></div>`;
+  box.innerHTML=h;
+  document.getElementById('qnav2').style.display='flex';
+  document.getElementById('nxtQ2').style.display='none';
+  document.getElementById('finQ2').style.display='none';
+}
+
+function ans2(ch){
+  const q=QQ[cur2];
+  for(let i=0;i<q.opts.length;i++){
+    const b=document.getElementById('oo'+i);
+    b.disabled=true;
+    if(i===q.c)b.classList.add('correct');
+    else if(i===ch&&ch!==q.c)b.classList.add('wrong');
+  }
+  const fb=document.getElementById('fb2');
+  fb.style.display='block';
+  if(ch===q.c){sc2++;fb.className='fb ok';fb.textContent='✅ '+q.e;}
+  else{fb.className='fb no';fb.textContent='❌ '+q.e;}
+  if(cur2<QQ.length-1)document.getElementById('nxtQ2').style.display='inline-flex';
+  else document.getElementById('finQ2').style.display='inline-flex';
+}
+
+function nxt2(){cur2++;rQ2()}
+
+function showScore2(){
+  let medal='🥉',msg='¡Sigue practicando!';
+  if(sc2===QQ.length){medal='🏆';msg='¡PERFECTO! ¡Eres un experto!';}
+  else if(sc2>=4){medal='🥇';msg='¡Excelente! ¡Casi perfecto!';}
+  else if(sc2>=3){medal='🥈';msg='¡Muy bien! Aprendiste mucho hoy.';}
+  document.getElementById('sh2').innerHTML=
+    `<span class="medal-big">${medal}</span>`+
+    `<div><span class="score-num">${sc2}</span><span class="score-of"> / ${QQ.length}</span></div>`+
+    `<p class="score-msg">${msg}</p>`;
+}
+
+function restart2(){cur2=0;sc2=0;go('p0')}
+
+function play2(){
+  if(busy2)return;busy2=true;
+  const svg=document.getElementById('msv2');
+  const btn=document.getElementById('pb2x');
+  const msg=document.getElementById('mm2');
+  svg.classList.add('rolling');
+  btn.disabled=true;btn.textContent='⚙️ Funcionando...';
+  const msgs=['⚡ ¡La pelota rueda!','🔨 ¡Activa la palanca!','📢 ¡La campana suena!','⚙️ ¡Los engranajes giran!','💡 ¡Luz encendida!'];
+  let mi=0;msg.textContent=msgs[0];
+  const iv=setInterval(()=>{mi++;if(mi<msgs.length)msg.textContent=msgs[mi];else clearInterval(iv)},1000);
+  setTimeout(()=>{
+    svg.classList.remove('rolling');
+    const b=document.getElementById('gb2');
+    b.setAttribute('cx',58);b.setAttribute('cy',86);
+    btn.disabled=false;btn.textContent='▶ ¡Activar de nuevo!';
+    msg.textContent='🎉 ¡La máquina funcionó perfectamente!';
+    busy2=false;
+  },5300);
+}
+
+document.getElementById('p6').addEventListener('transitionend',()=>{});
+const orig=go;
+window.go=function(id){orig(id);if(id==='p6')showScore2()};
+buildPB('p0');
+</script>
